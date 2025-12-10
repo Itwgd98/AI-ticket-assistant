@@ -1,0 +1,31 @@
+{
+  "name": "ai-ticket-assistant",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "nodemon index.js",
+    "start" : "node index.js",
+    "inngest-dev": "npx inngest-cli@latest dev"
+  },
+  "keywords": [],
+  "author": "Itwgd98",
+  "license": "ISC",
+  "description": "Ai-powered ticketing assistant backend service",
+  "devDependencies": {
+    "nodemon": "^3.1.10"
+  },
+  "dependencies": {
+    "@inngest/agent-kit": "^0.8.0",
+    "bcrypt": "^6.0.0",
+    "cors": "^2.8.5",
+    "db": "^6.0.3",
+    "dotenv": "^16.6.1",
+    "express": "^5.1.0",
+    "inngest": "^3.38.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongo": "^0.1.0",
+    "mongoose": "^8.15.1",
+    "nodemailer": "^7.0.3"
+  }
+}
