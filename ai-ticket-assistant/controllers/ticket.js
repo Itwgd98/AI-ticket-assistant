@@ -38,21 +38,51 @@ export const createTicket = async (req, res) => {
   }
 };
 
-// GET ALL TICKETS
+// GET ALL TICKETS (with search and filter)
 export const getTickets = async (req, res) => {
   try {
     const user = req.user;
+    const { search, status, priority, sortBy = "createdAt", order = "desc" } = req.query;
+
+    let query = {};
+    
+    // Build query based on user role
+    if (user.role === "user") {
+      query.createdBy = user._id;
+    }
+
+    // Search by title or description
+    if (search) {
+      query.$or = [
+        { title: { $regex: search, $options: "i" } },
+        { description: { $regex: search, $options: "i" } },
+      ];
+    }
+
+    // Filter by status
+    if (status) {
+      query.status = status;
+    }
+
+    // Filter by priority
+    if (priority) {
+      query.priority = priority;
+    }
+
+    // Sort options
+    const sortOrder = order === "asc" ? 1 : -1;
+    const sortOptions = { [sortBy]: sortOrder };
 
     let tickets;
 
     if (user.role !== "user") {
-      tickets = await Ticket.find({})
+      tickets = await Ticket.find(query)
         .populate("assignedTo", ["email", "_id"])
-        .sort({ createdAt: -1 });
+        .sort(sortOptions);
     } else {
-      tickets = await Ticket.find({ createdBy: user._id })
-        .select("title description status createdAt")
-        .sort({ createdAt: -1 });
+      tickets = await Ticket.find(query)
+        .select("title description status createdAt priority")
+        .sort(sortOptions);
     }
 
     return res.status(200).json({ tickets });
